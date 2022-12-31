@@ -21,7 +21,7 @@ class _LoginScreenState extends State<LoginScreen> {
           children: <Widget>[
             Container(
               height: 200.0,
-              child: Image.asset('images/logo.png'),
+              child: Hero(child: Image.asset('images/logo.png'), tag: "logo"),
             ),
             const SizedBox(
               height: 48.0,

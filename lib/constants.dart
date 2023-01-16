@@ -6,7 +6,7 @@ const kSenderBoxColor = Colors.white12;
 const kLoginButtonColor = Colors.blue;
 const kSendButtonColor = Colors.blue;
 var kRegisterButtonColor = Colors.yellow.shade900;
-const kBackgroundColor = Colors.white12;
+const kBackgroundColor = Colors.black;
 
 const kSendButtonTextStyle = TextStyle(
   color: Colors.lightBlueAccent,

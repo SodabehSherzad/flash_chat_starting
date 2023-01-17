@@ -1,16 +1,13 @@
-import 'package:flutter/material.dart';
+import "package:flutter/material.dart";
+
+import '../constants.dart';
+
 
 class RoundedButton extends StatelessWidget {
-  final String title;
-  final Color color;
-  final VoidCallback callback;
-
-  const RoundedButton(
-      {Key? key,
-      required this.title,
-      required this.color,
-      required this.callback})
-      : super(key: key);
+  Color color;
+  VoidCallback callback;
+  String title;
+  RoundedButton({required this.color, required this.title, required this.callback});
 
   @override
   Widget build(BuildContext context) {
@@ -26,7 +23,7 @@ class RoundedButton extends StatelessWidget {
           height: 42.0,
           child: Text(
             title,
-            style: const TextStyle(color: Colors.white),
+            style: const TextStyle(color: kWhiteColor),
           ),
         ),
       ),

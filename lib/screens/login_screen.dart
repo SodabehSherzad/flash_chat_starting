@@ -1,3 +1,5 @@
+import 'package:email_validator/email_validator.dart';
+
 import '../components/rounded_button.dart';
 import '/constants.dart';
 import 'package:flutter/material.dart';
@@ -27,8 +29,10 @@ class _LoginScreenState extends State<LoginScreen> {
             const SizedBox(
               height: 48.0,
             ),
-            TextField(
-              decoration: kTextFieldDecoration.copyWith(hintText: "Enter your Email"),
+            TextFormField(
+              decoration: kTextFieldDecoration.copyWith(hintText: "Enter your Email", label: Text("Email")),
+              autovalidateMode: AutovalidateMode.onUserInteraction,
+              validator: (email) => email != null && EmailValidator.validate(email )? null : "Please enter a valid Email!",
               onChanged: (value) {
                 //Do something with the user input
               },
@@ -36,8 +40,10 @@ class _LoginScreenState extends State<LoginScreen> {
             const SizedBox(
               height: 16,
             ),
-            TextField(
-              decoration: kTextFieldDecoration.copyWith(hintText: "Enter your password"),
+            TextFormField(
+              decoration: kTextFieldDecoration.copyWith(hintText: "Enter your password", label: Text("Password")),
+              autovalidateMode: AutovalidateMode.onUserInteraction,
+              validator: (password) => password != null && password.length > 5 ? null : "Password should be at least 6 charechter!",
               onChanged: (value) {
                 //Do something with the user input
               },

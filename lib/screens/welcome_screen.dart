@@ -22,7 +22,7 @@ class _WelcomeScreenState extends State<WelcomeScreen>
   void initState() {
     super.initState();
     controller =
-        AnimationController(vsync: this, duration: Duration(seconds: 1));
+        AnimationController(vsync: this, duration: Duration(seconds: 2));
         // animation = CurvedAnimation(parent: controller, curve: Curves.decelerate);
         animation = ColorTween(begin: Colors.yellow.shade800, end: kBackgroundColor).animate(controller);
          controller.forward();
@@ -72,7 +72,7 @@ class _WelcomeScreenState extends State<WelcomeScreen>
                     color: Colors.white,
                   ),
                    child: AnimatedTextKit(
-                    totalRepeatCount: 1,
+                    totalRepeatCount: 2,
                     animatedTexts: [
                       TypewriterAnimatedText('Flash Chat')
                       ],

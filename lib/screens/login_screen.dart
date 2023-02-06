@@ -43,6 +43,7 @@ class _LoginScreenState extends State<LoginScreen> {
             TextFormField(
               decoration: kTextFieldDecoration.copyWith(hintText: "Enter your password", label: Text("Password")),
               autovalidateMode: AutovalidateMode.onUserInteraction,
+              obscureText: true,
               validator: (password) => password != null && password.length > 5 ? null : "Password should be at least 6 charechter!",
               onChanged: (value) {
                 //Do something with the user input

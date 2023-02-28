@@ -4,6 +4,8 @@ import 'package:flash_chat_starting/services/auth_service.dart';
 import 'package:flutter/material.dart';
 import 'package:flash_chat_starting/constants.dart';
 
+import '../components/message_bubble.dart';
+
 class ChatScreen extends StatefulWidget {
   static const String id = 'chat_screen';
 
@@ -53,39 +55,7 @@ class _ChatScreenState extends State<ChatScreen> {
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           crossAxisAlignment: CrossAxisAlignment.stretch,
           children: <Widget>[
-            StreamBuilder<QuerySnapshot>(
-              stream: _fireStore.collection("messages").snapshots(),
-              builder: (context, snapshot) {
-                if (snapshot.connectionState == ConnectionState.waiting) {
-                  return const Expanded(
-                    child: Center(
-                      child: CircularProgressIndicator(
-                        backgroundColor: Colors.lightBlue,
-                      ),
-                    ),
-                  );
-                }
-                if (snapshot.hasData) {
-                  var messages = snapshot.data!.docs;
-                  List<Text> messageWidgets = [];
-                  for (var message in messages) {
-                    var messageText = message.get("text");
-                    var senderText = message.get("sender");
-
-                    Text messageWidget = Text("$messageText from $senderText");
-                    messageWidgets.add(messageWidget);
-                  }
-
-                  return Column(
-                    children: messageWidgets,
-                  );
-                } else {
-                  return Center(
-                    child: Text("Snapshot has not Data!"),
-                  );
-                }
-              },
-            ),
+            StreamMessage(fireStore: _fireStore),
             Container(
               decoration: kMessageContainerDecoration,
               child: Row(
@@ -105,6 +75,8 @@ class _ChatScreenState extends State<ChatScreen> {
                         "sender": AuthService().getCurrentUser!.email,
                         "text": _messageTextController.text
                       });
+
+                      _messageTextController.clear();
                     },
                     child: const Icon(Icons.send,
                         size: 30, color: kSendButtonColor),
@@ -118,3 +90,52 @@ class _ChatScreenState extends State<ChatScreen> {
     );
   }
 }
+
+class StreamMessage extends StatelessWidget {
+  const StreamMessage({
+    super.key,
+    required FirebaseFirestore fireStore,
+  }) : _fireStore = fireStore;
+
+  final FirebaseFirestore _fireStore;
+
+  @override
+  Widget build(BuildContext context) {
+    return StreamBuilder<QuerySnapshot>(
+      stream: _fireStore.collection("messages").snapshots(),
+      builder: (context, snapshot) {
+        if (snapshot.connectionState == ConnectionState.waiting) {
+          return const Expanded(
+            child: Center(
+              child: CircularProgressIndicator(
+                backgroundColor: Colors.lightBlue,
+              ),
+            ),
+          );
+        }
+        if (snapshot.hasData) {
+          var messages = snapshot.data!.docs;
+          List<Widget> messageBubbles = [];
+          for (var message in messages) {
+            var messageText = message.get("text");
+            var senderText = message.get("sender");
+
+            Widget messageBubble = MessageBubble(message: messageText, sender: senderText);
+            messageBubbles.add(messageBubble);
+          }
+
+          return Expanded(
+            child: ListView(
+              children: messageBubbles,
+            ),
+          );
+        } else {
+          return Center(
+            child: Text("Snapshot has not Data!"),
+          );
+        }
+      },
+    );
+  }
+}
+

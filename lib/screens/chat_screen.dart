@@ -42,11 +42,8 @@ class _ChatScreenState extends State<ChatScreen> {
               icon: const Icon(Icons.logout),
               onPressed: () {
                 // Implement logout functionality
-                // Navigator.pop(context);
-                // AuthService().signOut();
-                // getMessages();
-                messageStream();
-
+                Navigator.pop(context);
+                AuthService().signOut();
               }),
         ],
         title: const Text('⚡ ️Chat'),
@@ -56,6 +53,39 @@ class _ChatScreenState extends State<ChatScreen> {
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           crossAxisAlignment: CrossAxisAlignment.stretch,
           children: <Widget>[
+            StreamBuilder<QuerySnapshot>(
+              stream: _fireStore.collection("messages").snapshots(),
+              builder: (context, snapshot) {
+                if (snapshot.connectionState == ConnectionState.waiting) {
+                  return const Expanded(
+                    child: Center(
+                      child: CircularProgressIndicator(
+                        backgroundColor: Colors.lightBlue,
+                      ),
+                    ),
+                  );
+                }
+                if (snapshot.hasData) {
+                  var messages = snapshot.data!.docs;
+                  List<Text> messageWidgets = [];
+                  for (var message in messages) {
+                    var messageText = message.get("text");
+                    var senderText = message.get("sender");
+
+                    Text messageWidget = Text("$messageText from $senderText");
+                    messageWidgets.add(messageWidget);
+                  }
+
+                  return Column(
+                    children: messageWidgets,
+                  );
+                } else {
+                  return Center(
+                    child: Text("Snapshot has not Data!"),
+                  );
+                }
+              },
+            ),
             Container(
               decoration: kMessageContainerDecoration,
               child: Row(
@@ -75,7 +105,6 @@ class _ChatScreenState extends State<ChatScreen> {
                         "sender": AuthService().getCurrentUser!.email,
                         "text": _messageTextController.text
                       });
-                    
                     },
                     child: const Icon(Icons.send,
                         size: 30, color: kSendButtonColor),
